@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lensa Lokal — Arsip Video</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1B33; --gradTop:#162F52; --gradBottom:#050B16;
+    --panel:#132847; --border:#2A4A72;
+    --title:#fff; --body:#C3CFE0; --dim:#8FA2BB;
+    --gold:#D9A441; --hl:#EFB33C; --red:#FF7B6B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:linear-gradient(180deg,var(--gradTop) 0%,var(--bg) 45%,var(--gradBottom) 100%);
+    min-height:100vh; color:var(--title);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    padding:40px 20px 80px;
+  }
+  .wrap{max-width:1100px;margin:0 auto}
+
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:24px;border-bottom:2px solid var(--border);margin-bottom:44px;
+    flex-wrap:wrap;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .mark{
+    width:58px;height:58px;border-radius:15px;background:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 26px rgba(217,164,65,.35);
+  }
+  .mark span{font-size:38px;font-weight:900;font-style:italic;color:var(--bg);line-height:1;transform:translateY(-2px)}
+  .brandtext .l1{font-size:27px;font-weight:900;letter-spacing:1.5px;line-height:1.05;-webkit-text-stroke:.5px #fff}
+  .brandtext .l2{font-size:27px;font-weight:900;letter-spacing:1.5px;color:var(--gold);line-height:1.05}
+  .tag{
+    font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+    color:var(--dim);
+  }
+
+  h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.08;margin-bottom:16px}
+  h1 .hl{color:var(--hl)}
+  .lead{font-size:clamp(16px,2vw,20px);color:var(--body);line-height:1.55;max-width:760px;margin-bottom:44px}
+
+  .empty{
+    background:var(--panel);border:2px dashed var(--border);border-radius:24px;
+    padding:60px 32px;text-align:center;
+  }
+  .empty .ic{font-size:48px;margin-bottom:18px;opacity:.5}
+  .empty h2{font-size:24px;font-weight:800;margin-bottom:12px}
+  .empty p{color:var(--dim);font-size:16px;line-height:1.6;max-width:520px;margin:0 auto}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+  .card{
+    background:var(--panel);border:2px solid var(--border);border-radius:22px;
+    overflow:hidden;transition:border-color .2s, box-shadow .2s, transform .2s;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{border-color:var(--gold);box-shadow:0 0 40px rgba(217,164,65,.28);transform:translateY(-3px)}
+  .thumb{width:100%;aspect-ratio:9/16;object-fit:cover;background:#050B16;display:block}
+  .thumbph{
+    width:100%;aspect-ratio:9/16;background:linear-gradient(160deg,#162F52,#050B16);
+    display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:14px;
+  }
+  .cbody{padding:20px 22px 24px}
+  .card h3{font-size:19px;font-weight:800;line-height:1.3;margin-bottom:10px}
+  .meta{font-size:13px;color:var(--dim);margin-bottom:16px}
+  .btn{
+    display:inline-block;background:var(--gold);color:var(--bg);
+    font-size:14px;font-weight:800;letter-spacing:.5px;
+    padding:11px 20px;border-radius:999px;text-decoration:none;
+    transition:filter .2s;
+  }
+  .btn:hover{filter:brightness(1.12)}
+  .btn.ghost{background:transparent;border:2px solid var(--border);color:var(--body);margin-left:8px}
+
+  footer{margin-top:70px;padding-top:28px;border-top:1px solid var(--border);color:var(--dim);font-size:14px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark"><span>L</span></div>
+      <div class="brandtext">
+        <div class="l1">LENSA</div>
+        <div class="l2">LOKAL</div>
+      </div>
+    </div>
+    <div class="tag">Arsip Video</div>
+  </header>
+
+  <h1>Konten yang sudah <span class="hl">dirender</span></h1>
+  <p class="lead">Semua video @LensaLokal yang selesai diproduksi. Daftar ini terisi otomatis setiap kali proses render berhasil.</p>
+
+  <div class="grid" id="grid">
+    <div class="empty" style="grid-column:1/-1">
+      <div class="ic">🎬</div>
+      <h2>Memuat daftar video…</h2>
+      <p>Halaman ini mengambil data langsung dari repositori.</p>
+    </div>
+  </div>
+
+  <footer>
+    © <span id="yr"></span> Lensa Lokal · Sulawesi Selatan<br>
+    Dibangun dan diperbarui otomatis lewat GitHub Actions
+  </footer>
+</div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  const REPO = 'andihabibi717-alt/website';
+  const API = `https://api.github.com/repos/${REPO}/releases?per_page=50`;
+
+  const grid = document.getElementById('grid');
+
+  function fmtSize(b){
+    if(!b) return '';
+    return (b/1024/1024).toFixed(1) + ' MB';
+  }
+
+  async function load(){
+    try{
+      const res = await fetch(API);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const rels = await res.json();
+      const list = rels.filter(r => r.assets && r.assets.length);
+
+      if(!list.length){
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+          <div class="ic">🎬</div>
+          <h2>Belum ada video</h2>
+          <p>Video pertama akan muncul di sini otomatis setelah proses render pertama selesai.</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(r => {
+        const mp4 = r.assets.find(a => a.name.endsWith('.mp4'));
+        const png = r.assets.find(a => a.name.endsWith('.png'));
+        const d = new Date(r.published_at).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+        return `<div class="card">
+          ${png
+            ? `<img class="thumb" src="${png.browser_download_url}" alt="${r.name}" loading="lazy">`
+            : `<div class="thumbph">Tanpa pratinjau</div>`}
+          <div class="cbody">
+            <h3>${r.name}</h3>
+            <div class="meta">${d}${mp4 ? ' · ' + fmtSize(mp4.size) : ''}</div>
+            ${mp4 ? `<a class="btn" href="${mp4.browser_download_url}" target="_blank" rel="noopener">Unduh video</a>` : ''}
+            ${png ? `<a class="btn ghost" href="${png.browser_download_url}" target="_blank" rel="noopener">Thumbnail</a>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }catch(e){
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+        <div class="ic">⚠️</div>
+        <h2>Gagal memuat</h2>
+        <p>${e.message}. Kalau halaman ini baru dipasang, daftar video akan muncul setelah render pertama.</p>
+      </div>`;
+    }
+  }
+  load();
+</script>
+</body>
+</html>
